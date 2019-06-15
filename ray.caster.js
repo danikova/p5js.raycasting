@@ -4,7 +4,7 @@ class RayCaster{
         this.pos = createVector(x1, y1);
         this.rays = [];
 
-        for (let i = 0; i <= 360; i+=10) {
+        for (let i = 0; i < 360; i+=1) {
             this.rays.push(
                 new Ray(this.pos, radians(i))
             );
@@ -31,7 +31,8 @@ class RayCaster{
             });
             if(closest_point){
                 push();
-                stroke(255);
+                strokeWeight(5);
+                stroke(255, 50);
                 line(this.pos.x, this.pos.y, closest_point.x, closest_point.y);
                 pop();
             }
@@ -39,9 +40,6 @@ class RayCaster{
     }
 
     show(){
-        this.rays.forEach(ray => {
-            ray.show()
-        });
-
+        ellipse(this.pos.x, this.pos.y, 20);
     }
 }
