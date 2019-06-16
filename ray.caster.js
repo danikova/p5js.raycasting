@@ -16,8 +16,8 @@ class RayCaster{
 
         this.dots = [];
         this.walls.forEach(wall => {
-            this._add_dot(wall.a);
-            this._add_dot(wall.b);
+            this._add_unique_vector(this.dots, wall.a);
+            this._add_unique_vector(this.dots, wall.b);
         });
 
         this.rays = [];
@@ -26,36 +26,34 @@ class RayCaster{
         });
     }
 
-    _add_dot(pos){
-        for (const dot of this.dots) {
+    _add_unique_vector(list, pos){
+        for (const dot of list) {
             if(pos.equals(dot))
-                return;
+                return false;
         }
-        this.dots.push(pos);
+        list.push(pos);
+        return true;
     }
 
     castRays(){
         var ray_intersections = [];
+        var angle_indexer = [];
+        
         for (let i = 0; i < this.rays.length; i++) {
             this.rays[i].lookAt(this.dots[i]);
         }
 
-        // beginShape();
-        this.rays.forEach(dot => {
-            console.log(dot.dir);
-            // vertex(dot.x, dot.y);
-        });
-        // endShape(CLOSE);
+        for (let i = 0; i< this.rays.length; i++) {
+            var closest_point = this.dots[i];
 
-        this.rays.sort(
-            (ray1, ray2)=> this.pos.angleBetween(ray1.dir) < this.pos.angleBetween(ray2.dir)
-        );
+            if(this._add_unique_vector(ray_intersections, closest_point))
+                angle_indexer.push({
+                    index: i, angle: p5.Vector.sub(this.pos, closest_point).heading() + PI
+                });
 
-        for (const ray of this.rays) {
-            var closest_point = ray.dir;
             var min_dist = Infinity;
             this.walls.forEach(wall => {
-                const act_point = ray.cast(wall);
+                const act_point = this.rays[i].cast(wall);
                 if(act_point){
                     const d = p5.Vector.sub(this.pos, act_point).magSq();
                     if(d < min_dist){
@@ -64,12 +62,27 @@ class RayCaster{
                     }
                 }
             });
-            ray_intersections.push(closest_point);
+            if(this._add_unique_vector(ray_intersections, closest_point))
+                angle_indexer.push({
+                    index: i, angle: p5.Vector.sub(this.pos, closest_point).heading() + PI
+                });
         }
 
+        angle_indexer.sort(
+            (obj1, obj2)=> obj1.angle - obj2.angle
+        );
+
+        console.table(angle_indexer);
+
         beginShape();
-        ray_intersections.forEach(dot => {
-            vertex(dot.x, dot.y);
+        let index = 0;
+        angle_indexer.forEach(indexer => {
+            line(this.pos.x, this.pos.y, ray_intersections[indexer.index].x, ray_intersections[indexer.index].y);
+            console.log(ray_intersections[indexer.index], indexer.angle);
+            textSize(40);
+            text(index, ray_intersections[indexer.index].x - 20, ray_intersections[indexer.index].y + 20);
+            index++;
+            // vertex(ray_intersections[indexer.index].x, ray_intersections[indexer.index].y);
         });
         endShape(CLOSE);
     }

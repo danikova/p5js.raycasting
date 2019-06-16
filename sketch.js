@@ -4,7 +4,7 @@ let HEIGHT = 500;
 let walls = [];
 let caster = null;
 function setup() {
-    createCanvas(500, 500);
+    createCanvas(500 + 100, 500 + 100);
     frameRate(30);
 
     caster = new RayCaster(134, 325);
@@ -24,6 +24,7 @@ function setup() {
 
 function draw() {
     background(50);
+    translate(50, 50);
 
     push();
     stroke(255);
@@ -32,7 +33,7 @@ function draw() {
     });
     pop();
 
-    caster.update(mouseX, mouseY);
+    // caster.update(mouseX, mouseY);
 
     caster.show();
     caster.castRays();

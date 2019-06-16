@@ -17,8 +17,8 @@ class Ray{
         line(
             this.pos.x, 
             this.pos.y, 
-            this.pos.x + this.dir.x * 20, 
-            this.pos.y + this.dir.y * 20
+            this.pos.x + this.dir.x, 
+            this.pos.y + this.dir.y
         );
         pop();
     }
