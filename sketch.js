@@ -7,18 +7,19 @@ function setup() {
     createCanvas(500, 500);
     frameRate(30);
 
-    caster = new RayCaster(WIDTH/2, HEIGHT/2);
+    caster = new RayCaster(134, 325);
 
     walls.push(
+        // additional internal walls
+        new Wall(400, 100, 400, 400),
+
         // border walls
         new Wall(0, 0, WIDTH, 0),
         new Wall(0, 0, 0, HEIGHT),
         new Wall(WIDTH, HEIGHT, WIDTH, 0),
         new Wall(WIDTH, HEIGHT, 0, HEIGHT),
-
-        // additional internal walls
-        new Wall(400, 100, 400, 400)
     );
+    caster.collect_dots(walls);
 }
 
 function draw() {
@@ -34,5 +35,7 @@ function draw() {
     caster.update(mouseX, mouseY);
 
     caster.show();
-    caster.cast(walls);
+    caster.castRays();
+
+    noLoop();
 }

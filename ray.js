@@ -1,19 +1,19 @@
 
 class Ray{
+    epsilon = 0.000001;
     constructor(pos, angle){
         this.pos = pos;
         this.dir = p5.Vector.fromAngle(angle);
     }
 
-    lookAt(x, y){
-        this.dir.x = x - this.pos.x;
-        this.dir.y = y - this.pos.y;
-        this.dir.normalize(); 
+    lookAt(dot){
+        this.dir.x = dot.x - this.pos.x;
+        this.dir.y = dot.y - this.pos.y;
     }
 
     show(){
         push();
-        stroke(255);
+        stroke(0);
         line(
             this.pos.x, 
             this.pos.y, 
@@ -41,7 +41,7 @@ class Ray{
 
         var t = ((x1-x3)*(y3-y4)-(y1-y3)*(x3-x4)) / denominator;
         var u = -((x1-x2)*(y1-y3)-(y1-y2)*(x1-x3)) / denominator;
-        if(0 < t && t < 1 && 0 < u){
+        if(0+this.epsilon < t && t < 1-this.epsilon && 0+this.epsilon < u){
             var intersection_x = x1 + t*(x2-x1);
             var intersection_y = y1 + t*(y2-y1);
             return createVector(intersection_x, intersection_y);
